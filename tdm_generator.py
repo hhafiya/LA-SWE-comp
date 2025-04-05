@@ -26,7 +26,8 @@ def clean_text_count(file_path, stopwords_path, name_path):
         for line in f:
             cleaned_line = clean_text(line)
             words = cleaned_line.split()
-            filtered = [word for word in words if word not in stopwords and word not in names]
+            # filtered = [word for word in words if word not in stopwords and word not in names]
+            filtered = [word for word in words if word not in stopwords]
             word_counter.update(filtered)
     return word_counter
 
