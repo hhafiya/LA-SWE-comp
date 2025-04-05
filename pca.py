@@ -6,7 +6,6 @@ import sys
 
 def pca(V, k):
     V_centered = V - np.mean(V, axis = 0)
-    cov_matrix = np.cov(V_centered.T)
 
     U, S, Vt = svd(V_centered)
 
