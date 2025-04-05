@@ -9,8 +9,9 @@ def clean_text(line):
     punctuation_allowed = "'-"
     punctuation_to_remove = ''.join(c for c in string.punctuation if c not in punctuation_allowed)
     line = line.translate(str.maketrans('', '', punctuation_to_remove))
-    line = ' '.join(re.findall(r"\b[a-zA-Z]+(?:['-][a-zA-Z]+)*\b", line))
-    return line
+    line = re.findall(r"\b[a-zA-Z]+(?:['-][a-zA-Z]+)*\b", line)
+    line = [word[:-2] if word.endswith("'s") else word for word in line]
+    return ' '.join(line)
 
 
 def clean_text_count(file_path, stopwords_path, name_path):
