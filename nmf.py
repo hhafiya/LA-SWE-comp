@@ -1,6 +1,7 @@
 from tdm_generator import build_matrix
 import numpy as np
 import sys
+from transformers import pipeline
 
 def nmf(V, rank, max_iterations=1000, tol = 1e-4):
     np.random.seed(42)
@@ -15,7 +16,7 @@ def nmf(V, rank, max_iterations=1000, tol = 1e-4):
         W *= (V @ H.T) / (W @ H @ H.T + 1e-10)
         error = np.linalg.norm(V - W @ H)
 
-        if abs(prev_error - error) < tol:
+        if abs(prev_error - error) <= tol:
             break
         prev_error = error
 
@@ -34,17 +35,25 @@ def find_optimal_rank(V, rank_range=(2, 20), max_iterations=100):
 
     return optimal_rank
 
-def get_main_topic(W, H, vocabulary, top_n=20):
+def get_main_topic(W, H, vocabulary, top_k_topics=1, top_n_words=200):
     main_topics = []
-    
-    for doc_idx in range(W.shape[0]):  
-        main_topic_idx = np.argmax(W[doc_idx])
-        top_words_idx = np.argsort(H[main_topic_idx])[-top_n:]
-        top_words = [vocabulary[i] for i in reversed(top_words_idx)]
-        main_topics.append(" ".join(top_words))
-    
+
+    for doc_idx in range(W.shape[0]):
+        top_topic_indices = np.argsort(W[doc_idx])[-top_k_topics:]
+        words_set = set()
+
+        for topic_idx in reversed(top_topic_indices):
+            top_words_idx = np.argsort(H[topic_idx])[-top_n_words:]
+            for i in top_words_idx:
+                words_set.add(vocabulary[i])
+
+        main_topics.append(" ".join(words_set))
+
     return main_topics
 
+def create_pseudo_text(words):
+    word_list = words.split()
+    return f"{'Text is about' + ', '.join(word_list)}"
 
 def main():
     if len(sys.argv) < 1:
@@ -62,8 +71,33 @@ def main():
     W, H = nmf(term_doc_matrix, rank=rank, )
     topics = get_main_topic(W, H, vocabulary)
 
+    candidate_labels = [
+        "fantasy",
+        "romance",
+        "science fiction",
+        "horror",
+        "mystery",
+        "thriller",
+        "historical",
+        "adventure",
+        "drama",
+        "comedy",
+        "crime",
+        "biography",
+        "psychology",
+        "philosophy",
+        "science",
+        "economics",
+        "politics"
+    ]
+    classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
+
     for doc, topic in zip(doc_names, topics):
-        print(f"{doc}: {topic}")
+        pseudo_text = create_pseudo_text(topic)
+        result = classifier(pseudo_text, candidate_labels, multi_label=False)
+        best_genre = result["labels"][:3]
+        score = result["scores"][0]
+        print(f"{doc} — likely genre: {best_genre} (confidence: {score:.2f})")
 
 if __name__ == "__main__":
     main()
