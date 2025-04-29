@@ -1,9 +1,27 @@
 # LA-project Text Genre Classifier
+### Authors
+This project was made with love by: \
+    https://github.com/hhafiya \
+    https://github.com/shshrg \
+    https://github.com/linyvez 
 
-The goal of our project is to develop a simple machine learning model for the automatic classification of book genres based on their texts. We want to streamline the process of uploading books into a digital system, where each book must be assigned to an appropriate genre category.
+### Goal and Idea
+The goal of this project is to develop a simple machine learning model for the automatic classification of book genres based on their texts. We want to streamline the process of uploading books into a digital system, where each book must be assigned to an appropriate genre category.
 
-We use matrix factorization techniques, such as SVD, to generate static word embeddings. 
+Matrix factorization (specifically, SVD) is used to generate static word embeddings. 
 These embeddings are then fed into a text classifier based on a softmax model to predict
 the genre of a given text.
 
-To test our code, you first need to add some .txt format documents to the data/document folder. Once done, you are ready to go.
+### Usage
+First, install the necessary requirements from ```requirements.txt```. Then, the program can be used in two ways:
+1. Using ```train.py``` and ```predict.py``` scripts (*recommended method*)
+   
+   - The ```train.py``` script is used to generate necessary data from the training dataset.
+
+   - **Important**: We have already provided the necessary data in ```data/train_results```. Unless you want to train the model on your own data, there is no need to rerun this script and you can go straight to the prediction step.
+   
+   - The ```predict.py``` script is used to predict the genre(s) of books. You can run it via:
+     ```
+      python predict.py path_to_folder_with_books
+     ```
+     *Note*: Only ```.txt``` files are currently supported, so please make sure all the books in the folder are in that format.
