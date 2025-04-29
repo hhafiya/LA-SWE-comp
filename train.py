@@ -108,7 +108,7 @@ X_train_reduced = np.dot(X_train, W)
 
 
 # IMPORTANT: when changing the training set, update doc_labels
-doc_labels = ["fantasy"] * 5 + ["mystery"] * 5 + ["science fiction"] * 5 + ["horror"] * 5 + ["romance"] * 5 + ["adventure"] * 5 + ["biography"] * 5 + ["self help"] * 5 + ["textbook"] * 5
+doc_labels = ["fantasy"] * 5 + ["mystery"] * 5 + ["science fiction"] * 5 + ["horror"] * 5 + ["romance"] * 5 + ["adventure"] * 5  + ["self help"] * 5 + ["textbook"] * 5
 
 unique_labels = sorted(set(doc_labels))
 label_to_index = {l: i for i, l in enumerate(unique_labels)}
