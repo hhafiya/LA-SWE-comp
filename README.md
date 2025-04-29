@@ -25,3 +25,6 @@ First, install the necessary requirements from ```requirements.txt```. Then, the
       python predict.py path_to_folder_with_books
      ```
      *Note*: Only ```.txt``` files are currently supported, so please make sure all the books in the folder are in that format.
+2. Using the Jupyter Notebook
+
+   This notebook was mainly made for testing and tweaking the model, but you can still use it for testing predictions on some data. Make all the paths and the labels of documents are correct, and then run the cells. 
